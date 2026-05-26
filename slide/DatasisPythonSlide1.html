@@ -1,0 +1,715 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Python e Document Automation</title>
+<!-- metadata -->
+<meta charset="UTF-8" />
+<meta name="generator" content="Zim 0.76.3" />
+<meta name="version" content="S5 1.1" />
+<meta name="presdate" content="" />
+<meta name="author" content="" />
+<meta name="company" content="" />
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="./DatasisPythonSlide1_files/_resources/ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="./DatasisPythonSlide1_files/_resources/ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="./DatasisPythonSlide1_files/_resources/ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="./DatasisPythonSlide1_files/_resources/ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- S5 JS -->
+<script src="./DatasisPythonSlide1_files/_resources/ui/default/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+<div id="controls"><!-- DO NOT EDIT --></div>
+<div id="currentSlide"><!-- DO NOT EDIT --></div>
+<div id="header"></div>
+<div id="footer">
+<!--
+<h1>[location/date of presentation]</h1>
+<h2>[slide show title here]</h2>
+-->
+<h1 id="h1-footer">&nbsp;</h1>
+<h2 id="h2-footer">&nbsp;</h2>
+</div>
+
+</div>
+
+<div class="presentation">
+
+<div class="slide">
+<h1>Python e Document Automation<a id="python-e-document-automation" class="h_anchor"></a></h1>
+<h2>Lezione 1 / 7<a id="lezione-1--7" class="h_anchor"></a></h2>
+<h3>Antonio Chiurla<a id="antonio-chiurla" class="h_anchor"></a></h3>
+<h4>logo: python.png<a id="logo-pythonpng" class="h_anchor"></a></h4>
+<h4>date: 2026<a id="date-2026" class="h_anchor"></a></h4>
+
+
+</div>
+<div class="slide">
+<h1>Mi presento<a id="mi-presento" class="h_anchor"></a></h1>
+<p>
+Antonio Chiurla.<br>
+Sono un consulente informatico dal 1995.<br>
+Vivo a Genova dal 2006.<br>
+Sono nato a Perugia.<br>
+La prima tastiera che ho schiacciato è di un Commodore 64.<br>
+Preferisco la tastiera al mouse e non sopporto i software lenti.<br>
+Quando ho conosciuto Python non mi è piaciuto, era versione 1.<br>
+Mi sono ricreduto quando l'ho incontrato di nuovo, era la versione 3.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Programma del corso<a id="programma-del-corso" class="h_anchor"></a></h1>
+<ul>
+<li>Lezione 1 - Consolidare Python - Comandi base di utilizzo Git</li>
+<li>Lezione 2 - Jupyter - Pathlib - PyMuPDF - Pillow</li>
+<li>Lezione 3 - OpenCV - Binarizzazione - Denoising - Deskewing - Trasformazioni Morfologiche</li>
+<li>Lezione 4 - OCR - PyTesseract - EasyOCR - PSM/OEM - Fallback</li>
+<li>Lezione 5 - AI  - API sicure - Prompt Engineering - JSON Mode</li>
+<li>Lezione 6 - Elaborazione dati - Pandas - Data Cleaning - Excel/XML/CSV</li>
+<li>Lezione 7 - Automazione - SharePoint - Chiamate REST - Logging - Security</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Lezione 1<a id="lezione-1" class="h_anchor"></a></h1>
+<p>
+<b>Fondamenta e Architettura Modulare</b><br>
+Obiettivo:
+</p>
+<ul>
+<li>Consolidare Python per la gestione di flussi documentali complessi</li>
+<li>Comandi base di utilizzo Git</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Python<a id="python" class="h_anchor"></a></h1>
+<p>
+Inventato da Guido van Rossum per non annoiarsi durante le feste di Natale del 1989.<br>
+Prima versione ufficiale 0.9.0 nel 1991.<br>
+Versione 1.0 con moduli classi e eccezioni nel 1994.<br>
+Versione 2.0 con garbage collection e list comprehension nel 2000.<br>
+Versione 3.0 risolti problemi di progettazione nel 2008. <br>
+Oggi Python è gestito dalla no-profit Python Software Foundation.
+</p>
+
+<p>
+Linguaggio interpretato.<br>
+Annidamento di blocchi di codice tramite indentazione.
+</p>
+
+
+
+</div>
+<div class="slide">
+<h1>Tipi di Dati Base: Caratteristiche e Limiti<a id="tipi-di-dati-base-caratteristiche-e-limiti" class="h_anchor"></a></h1>
+<ul>
+<li><b>int</b>: Precisione arbitraria (gestisce numeri enormi senza overflow), utile per contatori di pagine o ID.</li>
+<li><b>float</b>: Segue lo standard IEEE 754. Attenzione ai limiti di precisione nei calcoli finanziari (es. 0.1 + 0.2 != 0.3). Per le fatture useremo spesso il tipo <tt>Decimal</tt>.</li>
+<li><b>str</b>: Immutabili. Fondamentali per l'output OCR. Ogni manipolazione crea una nuova stringa in memoria.</li>
+<li><b>bool</b>: Fondamentali per i flag di stato (es. <tt>is_processed</tt>).</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Collezioni: List e Tuple<a id="collezioni-list-e-tuple" class="h_anchor"></a></h1>
+<ul>
+<li><b>List</b> (Liste): Ordinate e mutabili. Ideali per una sequenza di pagine o una lista di file da processare.</li>
+</ul>
+<pre>
+pagine = ["pag1.jpg", "pag2.jpg"]
+pagine.append("pag3.jpg")
+</pre>
+<ul>
+<li><b>Tuple</b>: Ordinate ma <b>immutabili</b>. Più veloci delle liste. Si usano per dati che non devono cambiare (es. coordinate di un box OCR o parametri di configurazione).</li>
+</ul>
+<pre>
+box_ocr = (10, 10, 100, 50) # x, y, w, h
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Collezioni: Set e Dizionari<a id="collezioni-set-e-dizionari" class="h_anchor"></a></h1>
+<ul>
+<li><b>Set</b>: Collezione non ordinata di elementi <b>unici</b>. Utili per rimuovere duplicati velocemente o per test di appartenenza (molto performanti).</li>
+</ul>
+<pre>
+estensioni_ammesse = {"pdf", "png", "jpg"}
+</pre>
+<ul>
+<li><b>Dict</b> (Dizionari): Coppie chiave-valore. È la struttura principe per i dati estratti dai documenti.</li>
+</ul>
+<pre>
+dati = {"partita_iva": "12345678901", "totale": 150.50}
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Controllo di Flusso: Branching<a id="controllo-di-flusso-branching" class="h_anchor"></a></h1>
+<ul>
+<li><b>if / elif / else</b>: La struttura classica.</li>
+<li><b>match</b> (Python 3.10+): Potente per gestire diversi tipi di documenti o stati.</li>
+</ul>
+<pre>
+match documento.tipo:
+    case "Fattura":
+        processa_fattura()
+    case "DDT" | "Bolla":
+        processa_trasporto()
+    case _:
+        logger.error("Tipo sconosciuto")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Controllo di Flusso: for<a id="controllo-di-flusso-for" class="h_anchor"></a></h1>
+<ul>
+<li><b>for</b>: Per iterare su collezioni, file, pagine... Usare <tt>enumerate()</tt> se serve l'indice.</li>
+</ul>
+<pre>
+frutti = ["mela", "banana", "ciliegia"]
+
+for frutto in frutti:
+	print(frutto)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Controllo di Flusso: while<a id="controllo-di-flusso-while" class="h_anchor"></a></h1>
+<ul>
+<li><b>while / else</b>: Il blocco <tt>else</tt> viene eseguito solo se il ciclo termina <b>naturalmente</b> (senza <tt>break</tt>). Utile per i tentativi di connessione API.</li>
+</ul>
+<pre>
+tentativi = 0
+while tentativi &lt; 3:
+    if chiama_api(): break
+    tentativi += 1
+else:
+    # Eseguito solo se i 3 tentativi falliscono
+    alert_admin()
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>List comprehension<a id="list-comprehension" class="h_anchor"></a></h1>
+<p>
+Offre una sintassi sintetica per generare una lista basata sui valori di un'altra lista.
+</p>
+
+<pre>
+fruits = ["apple", "banana", "cherry", "kiwi", "mango"]
+fruits_with_a = [x for x in fruits if "a" in x]
+print(fruits_with_a)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Funzioni<a id="funzioni" class="h_anchor"></a></h1>
+<pre>
+def nuova_funzione(par1):
+   print(f"Valore ricevuto: {par1}")
+
+def tipizzata(par1: int, par2: double, par3: str) -&gt; bool:
+   print("faccio qualcosa")
+   return True
+</pre>
+
+
+
+</div>
+<div class="slide">
+<h1>Parametri opzionali<a id="parametri-opzionali" class="h_anchor"></a></h1>
+<pre>
+def nuova_funzione(par1, par2='par2default'):
+   print(f"Valori ricevuti: {par1} e {par2}")
+nuova_funzione('a', 'b')
+nuova_funzione('a')
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Parametri nominali<a id="parametri-nominali" class="h_anchor"></a></h1>
+<pre>
+def nuova_funzione(par1, par2):
+   print(f"Valori ricevuti: {par1} e {par2}")
+nuova_funzione(par2='b', par1='a')
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Parametri nominali e opzionali<a id="parametri-nominali-e-opzionali" class="h_anchor"></a></h1>
+<pre>
+def nuova_funzione(par1, par2='b', par3='c'):
+   print(f"Valori ricevuti: {par1}, {par2} e {par3")
+nuova_funzione(par3='ccc', par1='a')
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>OOP<a id="oop" class="h_anchor"></a></h1>
+<ul>
+<li>Programmazione orientata agli oggetti</li>
+<li>Uno stile di programmazione che modella il software attorno a "oggetti" del mondo reale</li>
+<li>Classe - definisce le proprietà e i metodi di un gruppo di oggetti</li>
+<li>Oggetto - l'istanza concreta della classe</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Incapsulamento<a id="incapsulamento" class="h_anchor"></a></h1>
+<ul>
+<li>Nascondere dei dettagli interni</li>
+<li>Aiuta a proteggere da usi non ortodossi di proprietà e metodi</li>
+</ul>
+
+
+
+</div>
+<div class="slide">
+<h1>Ereditarietà e Polimorfismo<a id="ereditarietà-e-polimorfismo" class="h_anchor"></a></h1>
+<ul>
+<li>Ereditarietà: Una classe "figlia" prende tutto dalla classe "padre" e aggiunge qualcosa di specifico
+<ul>
+<li>Esempio: La classe ClasseDerivata eredita da NuovaClasse ma aggiunge la proprietà prop3</li>
+</ul></li>
+<li>Polimorfismo: La capacità di oggetti diversi di rispondere allo stesso comando in modi diversi
+<ul>
+<li>Esempio: Se chiamo il metodo .notifica(), per un messaggio normale si invia una mail, per uno urgente si invia un SMS. Il comando è lo stesso, il risultato cambia.</li>
+</ul></li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Astrazione<a id="astrazione" class="h_anchor"></a></h1>
+<ul>
+<li>Mostrare il lato semplice degli oggetti nascondendo la complessità</li>
+<li>Si realizza con classi astratte e interfacce</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Overriding e overloading.<a id="overriding-e-overloading" class="h_anchor"></a></h1>
+<ul>
+<li>Overriding: Quando la classe figlia riscrive un metodo del padre perché deve fare qualcosa di diverso</li>
+<li>Overloading: Avere più metodi con lo stesso nome ma che accettano parametri diversi (es. calcola(x) e calcola(x, y)). Nota: In Python puro non esiste come in Java/C#, si gestisce con i parametri opzionali.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Classi<a id="classi" class="h_anchor"></a></h1>
+<pre>
+class NuovaClasse:
+   static_prop = 'Valore di prop di classe'
+
+   def __init__(self, param1, param2):
+      self.prop1 = param1
+      self.prop2 = param2
+</pre>
+
+<pre>
+   def change_prop1(self, param1):
+      self.prop1 = param1
+</pre>
+<p>
+Per i metodi valgono le stesse regole dei parametri delle funzioni
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Ereditarietà e Incapsulamento<a id="ereditarietà-e-incapsulamento" class="h_anchor"></a></h1>
+<pre>
+class ClasseDerivata(NuovaClasse):
+   def __init__(self, param1, param2, param3):
+      super().__init__(param1, param2)
+      self.prop3 = param3
+</pre>
+
+<pre>
+   def _protected_method():
+      pass
+</pre>
+
+<pre>
+   def __private_method():
+      pass
+</pre>
+
+
+
+</div>
+<div class="slide">
+<h1>Generare Eccezioni (raise)<a id="generare-eccezioni-raise" class="h_anchor"></a></h1>
+<p>
+Non aspettare che Python segnali un errore (es. <tt>FileNotFound</tt>). Segnala tu quando i dati non sono validi.
+</p>
+
+<p>
+   <tt>def verifica_partita_iva_italiana(partita_iva:str):</tt>
+</p>
+<pre>
+   if not partita_iva.startswith("IT"):
+      raise ValueError("Documento estero non supportato")
+</pre>
+<p>
+Lanciare un'eccezione interrompe il flusso e lo delega al primo blocco <tt>except</tt> disponibile.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Catturare Eccezioni (try/catch)<a id="catturare-eccezioni-trycatch" class="h_anchor"></a></h1>
+<p>
+Racchiudi le istruzioni che possono fallire in un blocco try/catch
+</p>
+<pre>
+  try:
+      verifica_partita_iva_italiana(partita_iva)
+  catch ValueError as value_error:
+      print("La partita iva non e' italiana")
+  else:
+      print("La partita iva e' italiana")
+  finally:
+      print("Ho controllato")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Eccezioni Personalizzate<a id="eccezioni-personalizzate" class="h_anchor"></a></h1>
+<p>
+Usare eccezioni generiche come <tt>ValueError</tt> rende difficile capire <b>chi</b> ha generato l'errore in uno script complesso.<br>
+Definire classi proprie permette di:
+</p>
+<ol type="1" start="1">
+<li>Filtrare gli errori in modo mirato.</li>
+<li>Trasportare metadati aggiuntivi (es. l'ID del documento).</li>
+<li>Rendere il codice auto-esplicativo.</li>
+</ol>
+
+
+</div>
+<div class="slide">
+<h1>Come definire Eccezioni Personalizzate<a id="come-definire-eccezioni-personalizzate" class="h_anchor"></a></h1>
+<p>
+Si eredita dalla classe base <tt>Exception</tt>.
+</p>
+<pre>
+class DocumentQualityError(Exception):
+    """Lanciata quando l'immagine è
+    troppo sfocata per l'OCR."""
+    def __init__(self, message, score):
+        super().__init__(message)
+        self.score = score
+
+# Utilizzo
+if quality_score &lt; 0.5:
+    raise DocumentQualityError("Qualità insufficiente",
+                quality_score)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Oggetti con chiusura automatica<a id="oggetti-con-chiusura-automatica" class="h_anchor"></a></h1>
+<p>
+Gli oggetti che prevedono una chiusura possono essere associati ad un blocco di istruzioni e la chiusura diventa automatica<br>
+<tt>with open("file_da_leggere", 'r', encoding='utf-8') as file:</tt><br>
+   <tt>for riga in file:</tt><br>
+<div style='padding-left: 60pt'>
+<tt>print(riga.strip())</tt>
+</div>
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Architettura Modulare<a id="architettura-modulare" class="h_anchor"></a></h1>
+<p>
+Un modulo è un singolo file con estensione <tt>.py</tt><br>
+Dividere il codice per responsabilità:
+</p>
+<ul>
+<li><b><tt>main.py</tt></b>: Orchestratore.</li>
+<li><b><tt>exceptions.py</tt></b>: Tutte le tue classi di errore custom.</li>
+<li><b><tt>core/</tt></b>: Cartella per i moduli di pulizia e OCR.</li>
+<li><b><tt>connectors/</tt></b>: Per SharePoint e API esterne.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Moduli<a id="moduli" class="h_anchor"></a></h1>
+<p>
+Per definire un nuovo modulo si crea un file con estensione <tt>py.</tt><br>
+Nel nuovo modulo si aggiungono variabili, funzioni e classi.<br>
+Alla fine <tt>if __name__ == "__main__": main()</tt><br>
+Per accedere ai contenuti di altri moduli va usata l'istruzione <tt>import</tt>.<br>
+Per installare moduli di librerie disponibili nell'ampio catalogo disponibile si usa il comando pip.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Virtual environment<a id="virtual-environment" class="h_anchor"></a></h1>
+<p>
+Rappresenta un ambiente Python virtuale completo.<br>
+Si usa per differenziare versione di Python e il set di librerie disponibili da quelle dell'installazione standard del linguaggio.<br>
+Si crea con il comando python -m venv &lt;directory_virtual_env&gt;<br>
+Si attiva con:
+</p>
+<ul>
+<li>windows
+<ul>
+<li>command prompt
+<ul>
+<li><tt>&lt;directory_virtual_env&gt;\Scripts\activate.bat</tt></li>
+</ul></li>
+<li>power shell
+<ul>
+<li><tt>&lt;directory_virtual_env&gt;\Scripts\Activate.ps1</tt></li>
+</ul></li>
+<li>linux
+<ul>
+<li><tt>source &lt;directory_virtual_env&gt;/bin/activate</tt></li>
+</ul></li>
+</ul></li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Installazione librerie<a id="installazione-librerie" class="h_anchor"></a></h1>
+<p>
+Molti moduli sono resi disponibili dall'installazione normale di Python.<br>
+Per installare altre librerie e renderle disponibili all'interprete Python si usa il comando <tt>pip.</tt><br>
+<tt>pip install &lt;nome_libreria&gt;</tt>
+</p>
+
+<p>
+Per trovare librerie nel catalogo: <a href="https://pypi.org/search" title="https://pypi.org/search" class="https">https://pypi.org/search</a>
+</p>
+
+<p>
+Per definire l'elenco delle dipendenze di un progetto con le rispettive versioni si può realizzare un file <tt>requirements.txt</tt> da utilizzare con il comando:<br>
+<tt>pip install -r requirements.txt</tt>
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Package<a id="package" class="h_anchor"></a></h1>
+<p>
+Un package è una directory che contiene moduli, deve contenere un file <tt>__init__.py</tt> e viene eseguito al primo import
+</p>
+
+<p>
+nome_package/<br>
+├── <u>init</u>.py<br>
+├── modulo_a.py<br>
+└── modulo_b.py
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Git - concetti di base<a id="git---concetti-di-base" class="h_anchor"></a></h1>
+<p>
+Dalla pagina di manuale: "git - the stupid content tracker".<br>
+Lo strumento di versionamento più diffuso.<br>
+In locale viene creata una directory .git nella directory del progetto con le informazioni interne.<br>
+La directory del progetto si chiama "working tree".<br>
+Il repository è il contenitore della configurazione e tutta la storia del progetto.<br>
+La staging area o index è quel contenitore virtuale dove si mettono le modifiche da includere nel prossimo commit.<br>
+Un commit rappresenta un gruppo di modifiche su uno o più file.<br>
+I branch rappresentano la storia delle versioni del progetto.<br>
+I branch possono avere un branch di riferimento come upstream.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Git - distribuito<a id="git---distribuito" class="h_anchor"></a></h1>
+<p>
+Un progetto può essere semplicemente locale oppure può essere collegato ad uno o più repository remoti, di solito uno solo.<br>
+Spesso i branch sono collegati ai propri corrispondenti upstream di repository remoti.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Git - aggiornamenti<a id="git---aggiornamenti" class="h_anchor"></a></h1>
+<p>
+Quando un branch ha un branch di upstream si eseguono particolari operazioni per sincronizzare le modifiche in ingresso e in uscita.<br>
+Per ricevere modifiche da un altro branch si può eseguire una operazione di "merge" per accogliere le nuove modifiche.<br>
+In alternativa, se nel nostro branch abbiamo aggiunto modifiche dopo l'ultimo merge, quindi si trova disallineato, possiamo ricorrere a "rebase" che parcheggia le nostre modifiche, applica le nuove modifiche e riapplica le nostre.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Git - stato pulito e allineato<a id="git---stato-pulito-e-allineato" class="h_anchor"></a></h1>
+<p>
+Quando si chiede lo stato del progetto si ottengono le informazioni su:
+</p>
+<ul>
+<li>working tree
+<ul>
+<li>se ci sono modifiche</li>
+</ul></li>
+<li>staging area
+<ul>
+<li>se ci sono file modificati segnati per il commit</li>
+</ul></li>
+<li>stato del branch rispetto a upstream
+<ul>
+<li>se il branch corrente è avanti, indietro o disallineato</li>
+</ul></li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Git - operazioni preliminari<a id="git---operazioni-preliminari" class="h_anchor"></a></h1>
+<ul>
+<li>inizializzazione progetto
+<ul>
+<li><tt>git init</tt> # crea il repository locale</li>
+<li><tt>git clone &lt;url_repo_remoto&gt;</tt> # scarica un repository remoto e crea il working tree</li>
+</ul></li>
+<li>configurazioni utente
+<ul>
+<li><tt>git config user.name "&lt;Il Tuo Nome&gt;"</tt> # imposta i dati utente per i commit futuri</li>
+<li><tt>git config user.email "&lt;indirizzo_e-mail&gt;"</tt></li>
+</ul></li>
+</ul>
+
+
+
+</div>
+<div class="slide">
+<h1>Git - comandi locali<a id="git---comandi-locali" class="h_anchor"></a></h1>
+<ul>
+<li>I comandi locali frequenti
+<ul>
+<li><tt>git status</tt> # per ottenere lo stato del repository locale</li>
+<li><tt>git log</tt> # per la storia dei commit</li>
+<li><tt>git checkout &lt;nome_branch&gt;</tt> # fa switch verso il branch</li>
+<li><tt>git checkout -b &lt;nuovo_branch&gt;</tt> # crea il branch</li>
+<li><tt>git branch -u &lt;nome_branch&gt;</tt> # collega branch &lt;nome_branch&gt; come upstream</li>
+<li><tt>git add &lt;file&gt;...</tt> # aggiunge i file nell'area di staging</li>
+<li><tt>git commit -m "commento"</tt> # aggiunge il commit</li>
+<li><tt>git merge &lt;branch_origine&gt;</tt> # integra &lt;branch_origine&gt; sul corrente</li>
+<li><tt>git rebase &lt;branch_base&gt;</tt> # riapplica i commit sulla base di &lt;branch_base&gt;</li>
+</ul></li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Git - annullare modifiche<a id="git---annullare-modifiche" class="h_anchor"></a></h1>
+<ul>
+<li>git restore &lt;file&gt; # annulla le modifiche a &lt;file&gt;</li>
+<li>git revert &lt;id_commit&gt;... # applica le modifiche inverse del commit o dei commit</li>
+<li>git reset &lt;id_commit | branch | tag&gt;
+<ul>
+<li><tt>--soft</tt> # file non modificati e inseriti in staging area</li>
+<li><tt>--mixed</tt> # file non modificati ma NON inseriti in staging area</li>
+<li><tt>--hard</tt> # annulla tutto: file e staging area</li>
+</ul></li>
+</ul>
+
+
+
+</div>
+<div class="slide">
+<h1>Git - interazioni con branch remoti<a id="git---interazioni-con-branch-remoti" class="h_anchor"></a></h1>
+<ul>
+<li>Interazioni con i repo remoti
+<ul>
+<li><tt>git remote add &lt;nome_origin&gt; &lt;url_repo&gt;</tt> # &lt;nome_origin&gt; di solito: origin</li>
+<li><tt>git branch -u &lt;nome_origin&gt;/&lt;nome_branch&gt;</tt> # collega branch a origin come upstream</li>
+<li><tt>git fetch</tt> # scarica novità da repo remoto</li>
+<li><tt>git merge</tt> # integra il branch di upstream</li>
+<li><tt>git pull</tt> # combinazione di fetch e merge del branch in origin</li>
+<li><tt>git push</tt> # spedisce novità verso repo remoto</li>
+</ul></li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Git - i conflitti<a id="git---i-conflitti" class="h_anchor"></a></h1>
+<p>
+Nelle operazioni di merge, rebase, revert... possono verificarsi dei conflitti<br>
+L'operazione si interrompe e servono interventi manuali per risolvere i conflitti<br>
+Si correggono i file con i conflitti e si aggiungono alla staging area<br>
+Operazioni possibili<br>
+  <tt>--continue</tt> # si prosegue dopo aver risolto i conflitti<br>
+  <tt>--skip</tt> # salta l'applicazione del commit corrente<br>
+  <tt>--abort</tt> # annulla l'intera operazione e torna allo stato precedente<br>
+  <tt>--quit</tt> # interrompe l'operazione ma non ripristina lo stato precedente<br>
+Si possno presentare numerosi conflitti durante un'operazione di merge o rebase
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Git - regole d'oro<a id="git---regole-doro" class="h_anchor"></a></h1>
+<ul>
+<li>Di solito si evita di modificare la storia di un branch, specialmente se remoto e condiviso con i colleghi</li>
+<li>Meglio non mettere le mani dentro .git</li>
+<li>Da principianti quando si presenta un problema irrisolvibile si cancella il progetto e si fa di nuovo <tt>git clone</tt></li>
+<li>Con l'esperienza il problema si risolve</li>
+<li>Si usa l'opzione <tt>--force</tt> solo in casi estremi</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Lab 1: Struttura e Robustezza<a id="lab-1-struttura-e-robustezza" class="h_anchor"></a></h1>
+<p>
+<b>Esercizio</b>:
+</p>
+<ol type="1" start="1">
+<li>Crea un nuovo progetto</li>
+<li>Crea il suo repository git locale</li>
+<li>Crea un ambiente virtuale</li>
+<li>Crea un file <tt>exceptions.py</tt> con un'eccezione <tt>OCRProcessingError</tt>.</li>
+<li>Crea un file <tt>main.py</tt> che cicla su una lista di stringhe.</li>
+<li>Se una stringa è vuota, lancia l'eccezione custom.</li>
+<li>Gestisci l'eccezione con un <tt>try...except</tt> stampando un messaggio di log.</li>
+</ol>
+
+
+</div>
+
+</div>
+
+</body>
+</html>
