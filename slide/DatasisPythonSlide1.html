@@ -373,7 +373,7 @@ Non aspettare che Python segnali un errore (es. <tt>FileNotFound</tt>). Segnala 
    <tt>def verifica_partita_iva_italiana(partita_iva:str):</tt>
 </p>
 <pre>
-   if not partita_iva.startswith("IT"):
+   if not partita_iva.startsWith("IT"):
       raise ValueError("Documento estero non supportato")
 </pre>
 <p>
@@ -440,7 +440,9 @@ if quality_score &lt; 0.5:
 <p>
 Gli oggetti che prevedono una chiusura possono essere associati ad un blocco di istruzioni e la chiusura diventa automatica<br>
 <tt>with open("file_da_leggere", 'r', encoding='utf-8') as file:</tt><br>
-   <tt>for riga in file:</tt><br>
+<div style='padding-left: 30pt'>
+  <tt>for riga in file:</tt>
+</div>
 <div style='padding-left: 60pt'>
 <tt>print(riga.strip())</tt>
 </div>
@@ -494,10 +496,10 @@ Si attiva con:
 <ul>
 <li><tt>&lt;directory_virtual_env&gt;\Scripts\Activate.ps1</tt></li>
 </ul></li>
+</ul></li>
 <li>linux
 <ul>
 <li><tt>source &lt;directory_virtual_env&gt;/bin/activate</tt></li>
-</ul></li>
 </ul></li>
 </ul>
 
@@ -674,7 +676,7 @@ Operazioni possibili<br>
   <tt>--skip</tt> # salta l'applicazione del commit corrente<br>
   <tt>--abort</tt> # annulla l'intera operazione e torna allo stato precedente<br>
   <tt>--quit</tt> # interrompe l'operazione ma non ripristina lo stato precedente<br>
-Si possno presentare numerosi conflitti durante un'operazione di merge o rebase
+Si possono presentare numerosi conflitti durante un'operazione di merge o rebase
 </p>
 
 

@@ -1,0 +1,424 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Python e Document Automation</title>
+<!-- metadata -->
+<meta charset="UTF-8" />
+<meta name="generator" content="Zim 0.76.3" />
+<meta name="version" content="S5 1.1" />
+<meta name="presdate" content="" />
+<meta name="author" content="" />
+<meta name="company" content="" />
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="./DatasisPythonSlide2_files/_resources/ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="./DatasisPythonSlide2_files/_resources/ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="./DatasisPythonSlide2_files/_resources/ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="./DatasisPythonSlide2_files/_resources/ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- S5 JS -->
+<script src="./DatasisPythonSlide2_files/_resources/ui/default/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+<div id="controls"><!-- DO NOT EDIT --></div>
+<div id="currentSlide"><!-- DO NOT EDIT --></div>
+<div id="header"></div>
+<div id="footer">
+<!--
+<h1>[location/date of presentation]</h1>
+<h2>[slide show title here]</h2>
+-->
+<h1 id="h1-footer">&nbsp;</h1>
+<h2 id="h2-footer">&nbsp;</h2>
+</div>
+
+</div>
+
+<div class="presentation">
+
+<div class="slide">
+<h1>Python e Document Automation<a id="python-e-document-automation" class="h_anchor"></a></h1>
+<h2>Lezione 2 / 7<a id="lezione-2--7" class="h_anchor"></a></h2>
+<h3>Antonio Chiurla<a id="antonio-chiurla" class="h_anchor"></a></h3>
+<h4>logo: python.png<a id="logo-pythonpng" class="h_anchor"></a></h4>
+<h4>date: 2026<a id="date-2026" class="h_anchor"></a></h4>
+
+
+</div>
+<div class="slide">
+<h1>Lezione 2<a id="lezione-2" class="h_anchor"></a></h1>
+<p>
+<b>Gestione Documenti: PDF, Immagini e File System</b><br>
+Argomenti:
+</p>
+<ul>
+<li>Ambiente</li>
+<li>Jupyter</li>
+<li>Pathlib</li>
+<li>PyMuPDF (fitz)</li>
+<li>Pillow</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Prepariamo un ambiente<a id="prepariamo-un-ambiente" class="h_anchor"></a></h1>
+<p>
+Posizioniamoci in una directory a scelta.<br>
+Eseguiamo il clone del progetto da github e creiamo l'ambiente:<br>
+<tt>git clone</tt> <a href="https://github.com/antoniochiurla/corso-python-documentale.git" title="https://github.com/antoniochiurla/corso-python-documentale.git" class="https"><tt>https://github.com/antoniochiurla/corso-python-documentale.git</tt></a><br>
+<a href="https://github.com/antoniochiurla/corso-python-documentale.git" title="cd corso-python-documentale" class="https"><tt>cd corso-python-documentale</tt></a><br>
+<tt>python -m venv venv</tt>
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Jupyter Notebook<a id="jupyter-notebook" class="h_anchor"></a></h1>
+<p>
+<b>Perché usarlo in questo corso?</b>
+</p>
+<ul>
+<li><b>Feedback Immediato</b>: Vedi l'immagine elaborata subito sotto il codice.</li>
+<li><b>Sperimentazione Iterativa</b>: Puoi modificare un parametro di un filtro OpenCV e rieseguire solo quella cella, senza ripartire dall'inizio.</li>
+<li><b>Documentazione Viva</b>: Puoi alternare blocchi di codice a spiegazioni in <b>Markdown</b> (testo formattato).</li>
+<li><b>Standard Industriale</b>: È lo strumento principe per Data Scientist e chi lavora con l'AI.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Python e Jupyter in VSCode<a id="python-e-jupyter-in-vscode" class="h_anchor"></a></h1>
+<p>
+Installare le estensioni:
+</p>
+<ul>
+<li>Python - ms-python.python</li>
+<li>Python Debugger - ms-python.debugpy</li>
+<li>Python Environments - ms-python.vscode-python-envs</li>
+<li>Pylance - ms-python.vscode-pylance</li>
+<li>Jupyter - ms-toolsai.jupyter</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Anatomia di un Notebook<a id="anatomia-di-un-notebook" class="h_anchor"></a></h1>
+<p>
+Un Notebook è composto da <b>Celle</b>. Ne esistono principalmente di due tipi:
+</p>
+<ol type="1" start="1">
+<li><b>Celle di Codice</b>: Dove scriviamo Python. L'output (testi, grafici, immagini) appare subito sotto.</li>
+<li><b>Celle Markdown</b>: Dove scriviamo la documentazione. Supportano titoli, grassetti, liste e persino formule matematiche.</li>
+</ol>
+
+<p>
+<b>Il concetto di "Kernel"</b>:<br>
+È il "motore" Python che gira in sottofondo. Ricorda tutte le variabili definite nelle celle precedenti, anche se le celle vengono eseguite in ordine sparso.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Comandi Rapidi e Workflow<a id="comandi-rapidi-e-workflow" class="h_anchor"></a></h1>
+<p>
+Per essere produttivi in Jupyter bastano pochi comandi da tastiera:
+</p>
+<ul>
+<li><b>Shift + Invio</b>: Esegue la cella corrente e passa alla successiva.</li>
+<li><b>Alt + Invio</b>: Esegue la cella e ne crea una nuova sotto.</li>
+<li><b>Esc + A / B</b>: (In modalità comando) Inserisce una cella sopra (Above) o sotto (Below).</li>
+<li><b>Esc + M</b>: Trasforma una cella di codice in Markdown.</li>
+<li><b>Esc + DD</b>: Elimina la cella corrente.</li>
+</ul>
+
+<p>
+<b>Suggerimento</b>: Se usi <b>VS Code</b>, puoi creare un file con estensione <tt>.ipynb</tt> per avere la stessa esperienza senza uscire dal tuo editor preferito.
+</p>
+
+
+
+</div>
+<div class="slide">
+<h1>Gestione moderna del File System<a id="gestione-moderna-del-file-system" class="h_anchor"></a></h1>
+<p>
+Dimentichiamo il vecchio modulo <tt>os.path</tt>. <b>Pathlib</b> tratta i percorsi come oggetti, non come stringhe.<br>
+Perché usarlo?
+</p>
+<ul>
+<li>Sintassi intuitiva (usa l'operatore <tt>/</tt> per unire i percorsi).</li>
+<li>Compatibilità cross-platform automatica (Windows vs Linux).</li>
+<li>Metodi potenti per estensioni e nomi file.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>File System con Pathlib<a id="file-system-con-pathlib" class="h_anchor"></a></h1>
+<p>
+Esempi:
+</p>
+
+<pre>
+from pathlib import Path
+
+base_path = Path("in")
+input_file = base_path / "Ricevute.pdf"
+
+print(input_file.name)      # Ricevute.pdf
+print(input_file.stem)      # Ricevute
+print(input_file.suffix)    # .pdf
+</pre>
+<p>
+Provare esempio con Jupyter
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Navigazione e Scansione Cartelle<a id="navigazione-e-scansione-cartelle" class="h_anchor"></a></h1>
+<p>
+Trovare tutti i documenti in una cartella (e sottocartelle) è immediato con <tt>glob</tt> e <tt>rglob</tt>.
+</p>
+
+<pre>
+cartella_input = Path("./in")
+
+# Cerca solo i PDF nella cartella corrente
+percorsi_pdf = list(cartella_input.glob("*.pdf"))
+
+# Cerca PDF, JPG e PNG in modo ricorsivo
+estensioni = ("*.pdf", "*.jpg", "*.png")
+tutti_i_files = []
+for ext in estensioni:
+    tutti_i_files.extend(cartella_input.rglob(ext))
+
+print(f"Trovati {len(tutti_i_files)} documenti.")
+</pre>
+<p>
+Provare esempio con Jupyter
+</p>
+
+
+</div>
+<div class="slide">
+<h1>PyMuPDF (fitz)<a id="pymupdf-fitz" class="h_anchor"></a></h1>
+<p>
+PyMuPDF è una delle librerie più veloci e complete per manipolare i PDF.<br>
+Operazioni principali:
+</p>
+<ol type="1" start="1">
+<li>Leggere il testo (se presente come "testo nativo").</li>
+<li>Estrarre metadati (autore, data creazione).</li>
+<li><b>Renderizzare le pagine in immagini</b> (fondamentale per l'OCR).</li>
+</ol>
+
+<p>
+<tt>pip install PyMuPDF</tt>
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Il coltellino svizzero per i PDF<a id="il-coltellino-svizzero-per-i-pdf" class="h_anchor"></a></h1>
+
+<pre>
+import fitz # PyMuPDF
+
+doc = fitz.open("in/git-slides.pdf")
+print(f"git-slides: Pagine totali: {len(doc)}")
+print(f"Metadati: {doc.metadata}")
+
+# Estrazione testo rapida (se il PDF non è una scansione)
+for pagina in doc:
+    testo = pagina.get_text(sort=False) # provare sort=True
+    print(testo)
+</pre>
+
+<p>
+Provare con esempio in jupyter
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Rendering PDF per l'OCR (Alta Qualità)<a id="rendering-pdf-per-locr-alta-qualità" class="h_anchor"></a></h1>
+<p>
+Se il PDF è una scansione, possiamo interpretare con OCR.<br>
+PyMuPDF ricorre a Tesseract
+</p>
+
+<p>
+L'OCR richiede risoluzione!
+</p>
+
+<p>
+Dobbiamo impostare una <b>Matrix</b> per aumentare i DPI (standard 300 DPI).
+</p>
+
+<pre>
+doc = fitz.open("in/Ricevute.pdf")
+pagina = doc[0] # Prendi la prima pagina
+
+# Aumenta la risoluzione (2.0 = 144 DPI, 4.0 = 288 DPI)
+zoom = 4
+mat = fitz.Matrix(72 * zoom / 72, 72 * zoom / 72)
+clip=(15,20,160,50)
+pix = pagina.get_pixmap(matrix=mat, clip=clip)
+
+# Salvataggio per il prossimo step (Preprocessing)
+pix.save(f"out/Ricevute_zoom{zoom}.png")
+
+</pre>
+<p>
+Provare con esempio Jupyter
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Considerazioni sui DPI<a id="considerazioni-sui-dpi" class="h_anchor"></a></h1>
+<p>
+Per definizione 1 pollice contiene 72 punti.<br>
+Aumentare lo zoom aumenta la risoluzione.
+</p>
+
+<p>
+Se il PDF è "nativo" contiene font vettoriali e "zoommabile" all'infinito.
+</p>
+
+<p>
+Zoommando un documento scannerizzato i dettagli non si possono "inventare".<br>
+Interpolando si ammorbidiscono i bordi dei pixel.<br>
+I software OCR richiedono una risoluzione minima dei caratteri, esempio altezza da 20 a 40 pixel.<br>
+Seguono approfondimenti sull'interpolazione nella lezione 3
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Pillow (PIL)<a id="pillow-pil" class="h_anchor"></a></h1>
+<p>
+Una volta ottenuta l'immagine (o se partiamo da un JPG/PNG), usiamo <b>Pillow</b> per le operazioni di base.<br>
+Pillow è eccellente per:
+</p>
+<ul>
+<li>Identificare dimensioni e formato.</li>
+<li>Ritagliare aree specifiche (es. solo l'intestazione).</li>
+<li>Convertire formati.</li>
+</ul>
+
+<p>
+<tt>pip install pillow</tt>
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Manipolazione Immagini<a id="manipolazione-immagini" class="h_anchor"></a></h1>
+<pre>
+from PIL import Image
+
+img = Image.open("pagina_alta_risoluzione.png")
+print(img.size)   # (Larghezza, Altezza)
+print(img.format) # PNG
+
+# Conversione in scala di grigi per risparmiare memoria
+img_gray = img.convert("L")
+img_gray.save("documento_gray.png")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Pillow metodo convert<a id="pillow-metodo-convert" class="h_anchor"></a></h1>
+<pre>
+image.convert(mode=None, matrix=None, dither=None, palette=0, ...)
+</pre>
+<p>
+mode:<br>
+L: 8-bit scala di grigi.<br>
+RGB: 24-bit true color.<br>
+RGBA: 32-bit true color con trasparenza.<br>
+CMYK: 32-bit color separation, utile per la stampa.<br>
+YCbCr: 24-bit color video format, solitamente usato per video encoding.<br>
+I: 32-bit signed integer, fornisce alta precisione.<br>
+F: 32-bit floating point, offre precisione e un'ampia gamma dinamica.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Ritaglio di Aree (ROI - Region of Interest)<a id="ritaglio-di-aree-roi---region-of-interest" class="h_anchor"></a></h1>
+<p>
+Spesso non serve processare tutto il documento. Se sappiamo che la Partita IVA è in alto a destra:
+</p>
+
+<pre>
+# Definizione box: (left, top, right, bottom)
+# Esempio: ritaglia un rettangolo di 500x200 pixel
+#          in alto a sinistra
+area_intestazione = (0, 0, 500, 200)
+cropped_img = img.crop(area_intestazione)
+cropped_img.save("intestazione.png")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Caso d'Uso: Gestione Documenti Storici<a id="caso-duso-gestione-documenti-storici" class="h_anchor"></a></h1>
+<p>
+Per scannerizzazioni di documenti stampati o scritti a mano, la risoluzione è tutto.
+</p>
+<ul>
+<li><b>Problema</b>: Immagini troppo pesanti bloccano le API.</li>
+<li><b>Soluzione</b>: Ridimensionare mantenendo le proporzioni.</li>
+</ul>
+
+<pre>
+def ridimensiona_proporzionale(image_path, max_width=2000):
+    with Image.open(image_path) as img:
+        w_percent = (max_width / float(img.size[0]))
+        h_size = int((float(img.size[1]) * float(w_percent)))
+        img = img.resize((max_width, h_size))
+        img.save("ottimizzato.png", "PNG", quality=95)
+
+ridimensiona_proporzionale("scansione_pesante.png")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Lab 2: Pipeline di Input<a id="lab-2-pipeline-di-input" class="h_anchor"></a></h1>
+<p>
+<b>Esercizio Pratico</b>:
+</p>
+<ol type="1" start="1">
+<li>Crea uno script che scansioni la cartella <tt>./input</tt>.</li>
+<li>Se trova un PDF, lo converte in immagini (una per pagina) a 300 DPI.</li>
+<li>Se trova un'immagine troppo grande (&gt; 2000px), la ridimensiona.</li>
+<li>Salva tutto in una cartella <tt>./temp_processing</tt> rinominando i file in modo ordinato (es: <tt>doc01_pag1.png</tt>).</li>
+</ol>
+
+
+</div>
+<div class="slide">
+<h1>Discussione: I tuoi documenti<a id="discussione-i-tuoi-documenti" class="h_anchor"></a></h1>
+<ul>
+<li>Hai documenti multipagina molto lunghi? (Gestione memoria)</li>
+<li>I documenti storici sono solitamente in bianco e nero o seppia?</li>
+<li>Qual è la risoluzione media delle tue scansioni attuali?</li>
+</ul>
+
+</div>
+
+</div>
+
+</body>
+</html>
