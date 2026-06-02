@@ -1,4 +1,6 @@
 /.idea
 /venv
 /.vscode
-/Lezioni/Lezione2/out
+/Lezioni/Lezione*/out
+/**/__pycache__/
+/**/.ipynb_checkpoints/
