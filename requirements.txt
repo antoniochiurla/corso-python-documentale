@@ -4,3 +4,5 @@ pandas
 jupyter
 PyMuPDF
 opencv-python
+pytesseract
+ipywidgets
