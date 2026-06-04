@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Python e Document Automation</title>
+<!-- metadata -->
+<meta charset="UTF-8" />
+<meta name="generator" content="Zim 0.76.3" />
+<meta name="version" content="S5 1.1" />
+<meta name="presdate" content="" />
+<meta name="author" content="" />
+<meta name="company" content="" />
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="./DatasisPythonSlide4_files/_resources/ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="./DatasisPythonSlide4_files/_resources/ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="./DatasisPythonSlide4_files/_resources/ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="./DatasisPythonSlide4_files/_resources/ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- S5 JS -->
+<script src="./DatasisPythonSlide4_files/_resources/ui/default/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+<div id="controls"><!-- DO NOT EDIT --></div>
+<div id="currentSlide"><!-- DO NOT EDIT --></div>
+<div id="header"></div>
+<div id="footer">
+<!--
+<h1>[location/date of presentation]</h1>
+<h2>[slide show title here]</h2>
+-->
+<h1 id="h1-footer">&nbsp;</h1>
+<h2 id="h2-footer">&nbsp;</h2>
+</div>
+
+</div>
+
+<div class="presentation">
+
+<div class="slide">
+<h1>Python e Document Automation<a id="python-e-document-automation" class="h_anchor"></a></h1>
+<h2>Lezione 4 / 7<a id="lezione-4--7" class="h_anchor"></a></h2>
+<h3>Antonio Chiurla<a id="antonio-chiurla" class="h_anchor"></a></h3>
+<h4>logo: python.png<a id="logo-pythonpng" class="h_anchor"></a></h4>
+<h4>date: 2026<a id="date-2026" class="h_anchor"></a></h4>
+
+
+</div>
+<div class="slide">
+<h1>Lezione 4<a id="lezione-4" class="h_anchor"></a></h1>
+<p>
+<b>OCR Engines: Estrarre Testo da Immagini</b><br>
+Argomenti
+</p>
+<ul>
+<li>PyTesseract</li>
+<li>EasyOCR</li>
+<li>PSM/OEM</li>
+<li>Logiche di Fallback</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>I due giganti dell'OCR Open Source<a id="i-due-giganti-dellocr-open-source" class="h_anchor"></a></h1>
+<p>
+Esistono due approcci principali alla lettura dei caratteri:
+</p>
+<ol type="1" start="1">
+<li><b>Tesseract (Google)</b>: Basato su LSTM (reti neurali ricorrenti). Eccellente per documenti scansionati "puliti", tabelle e testi lunghi. Molto veloce.</li>
+<li><b>EasyOCR</b>: Basato su Deep Learning (PyTorch). Molto più robusto con scritte inclinate, caratteri deformati o <b>scrittura a mano</b>. Più lento e richiede più memoria (o GPU).</li>
+</ol>
+
+
+</div>
+<div class="slide">
+<h1>PyTesseract<a id="pytesseract" class="h_anchor"></a></h1>
+<p>
+<tt>pip install pytesseract</tt>
+</p>
+<pre>
+import pytesseract
+
+# Tesseract ha bisogno del percorso
+#    dell'eseguibile su Windows
+pytesseract.pytesseract.tesseract_cmd =
+           r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>PyTesseract: Configurazione PSM<a id="pytesseract-configurazione-psm" class="h_anchor"></a></h1>
+<p>
+Il segreto di Tesseract non è solo la qualità dell'immagine, ma il <b>Page Segmentation Mode (PSM)</b>. Indica a Tesseract *come* guardare il documento.
+</p>
+
+<ul>
+<li><b>PSM 3 (Default)</b>: Analisi automatica completa.</li>
+<li><b>PSM 4</b>: Assume una singola colonna di testo di dimensioni variabili (ottimo per ricevute).</li>
+<li><b>PSM 6</b>: Assume un singolo blocco uniforme di testo (ottimo per paragrafi di documenti storici).</li>
+<li><b>PSM 11</b>: Cerca solo testo sparso (ottimo per tesserini o etichette).</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>PyTesseract<a id="pytesseract" class="h_anchor"></a></h1>
+<pre>
+config = "--psm 6"
+testo = pytesseract.image_to_string(img_binarizzata,
+                   config=config, lang='ita')
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>PyTesseract: Ottenere Dati Strutturati<a id="pytesseract-ottenere-dati-strutturati" class="h_anchor"></a></h1>
+<p>
+Non sempre vogliamo solo il testo. Spesso ci servono le <b>coordinate</b> di dove si trova una parola per capire se è vicina a un'etichetta (es. "Totale:").
+</p>
+
+<pre>
+data = pytesseract.image_to_data(img,
+            output_type=pytesseract.Output.DICT)
+
+# 'data' contiene: confidenza (affidabilità),
+#    coordinate (left, top, width, height), testo
+for i in range(len(data['text'])):
+    if int(data['conf'][i]) &gt; 70: # Filtra per affidabilità
+        parola = data['text'][i]
+        left = data['left'][i]
+        top = data['top'][i]
+        print(f"Parola: {parola} a pos: {left},{top}")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>EasyOCR: Il re dell'Handwriting<a id="easyocr-il-re-dellhandwriting" class="h_anchor"></a></h1>
+<p>
+Per le checklist compilate a mano o i tesserini venatori con dati tabellari incerti, EasyOCR è spesso la scelta migliore.
+</p>
+<ul>
+<li>Supporta 80+ lingue contemporaneamente.</li>
+<li>Restituisce nativamente le coordinate e la probabilità.</li>
+</ul>
+<p>
+<tt>pip install easyocr</tt>
+</p>
+<pre>
+import easyocr
+</pre>
+
+<pre>
+reader = easyocr.Reader(['it', 'en']) # Carica il modello
+results = reader.readtext("checklist_mano.jpg")
+
+for (bbox, text, prob) in results:
+    print(f"Testo: {text} (Affidabilità: {prob:.2f})")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Estrazione a "Zona" (ROI OCR)<a id="estrazione-a-zona-roi-ocr" class="h_anchor"></a></h1>
+<p>
+Se il documento è strutturato (es. una scheda anagrafica fissa), non leggiamo tutto. Ritagliamo l'area d'interesse con OpenCV e passiamo all'OCR solo quel pezzetto.
+</p>
+<ul>
+<li><b>Vantaggio</b>: Riduzione drastica dei tempi di calcolo e dei "falsi positivi" (rumore scambiato per testo).</li>
+</ul>
+
+<pre>
+# Ritaglio area Partita IVA (coordinate ipotetiche)
+piva_roi = img[100:150, 400:600]
+</pre>
+<p>
+<div style='padding-left: 30pt'>
+<tt># PSM 7 = singola riga</tt>
+</div>
+</p>
+<pre>
+piva = pytesseract.image_to_string(piva_roi, config="--psm 7")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Torniamo a PyMuPDF<a id="torniamo-a-pymupdf" class="h_anchor"></a></h1>
+<p>
+Da una pagina di un documento PDF si può estrarre del testo eseguendo:
+</p>
+
+<p>
+<div style='padding-left: 30pt'>
+<tt>zoom = 4</tt>
+</div>
+</p>
+<pre>
+testo = pagina.get_textpage_ocr(dpi=72*zoom)
+</pre>
+
+<p>
+La libreria si appoggia alle funzionalità di Tesseract.
+</p>
+
+<p>
+Provare con Jupyter
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Proviamo del codice suggerito da Gemini<a id="proviamo-del-codice-suggerito-da-gemini" class="h_anchor"></a></h1>
+<p>
+Ho chiesto a Gemini di produrre del codice Python per trattare il PDF con le varie pagine del modello riempito a mano.<br>
+Per Facilitare il processo di OCR ho fornito anche il modello vuoto da sottrarre all'immagine.<br>
+Ho fatto prevedere l'utilizzo di Pytesseract e EasyOCR.<br>
+Dopo pochi adeguamenti ho reso utilizzabile il codice nel nostro notebook Jupyter.
+</p>
+
+<p>
+Controllare su Jupiter e tornare per alcune spiegazioni.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Spiegazione fornita da Gemini 1/3<a id="spiegazione-fornita-da-gemini-13" class="h_anchor"></a></h1>
+<p>
+Rilevamento Punti Chiave (ORB): Il codice analizza gli angoli e le forme delle scritte fisse comuni ad entrambe le immagini (ad esempio i riquadri delle tabelle o le parole stampate della testata).
+</p>
+
+<p>
+Omografia (cv2.warpPerspective): Prende il tuo file modello.jpg, lo ruota, lo scala e lo deforma impercettibilmente affinché combaci al pixel con il foglio scansionato all'interno del PDF.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Spiegazione fornita da Gemini 2/3<a id="spiegazione-fornita-da-gemini-23" class="h_anchor"></a></h1>
+<p>
+Dilatazione Protettiva (cv2.dilate): Allarga di 1 o 2 pixel i tratti del modello vuoto prima di cancellarlo. Questo trucco impedisce che piccoli artefatti di stampa o variazioni di spessore del font prestampato lascino fastidiosi "bordi" neri che l'OCR potrebbe scambiare per lettere.
+</p>
+
+<p>
+Sottrazione Matematica: L'operazione cv2.subtract cancella letteralmente ogni elemento grafico condiviso. Rimarranno visibili esclusivamente le parti che mancano sul foglio bianco originale: ovvero le crocette (X) posizionate nelle checkbox e i dati anagrafici scritti nei campi liberi.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Spiegazione fornita da Gemini 3/3<a id="spiegazione-fornita-da-gemini-33" class="h_anchor"></a></h1>
+<p>
+Gestione del layout flessibile: Tesseract spesso si confonde se trova parole sparse nel vuoto (dopo che abbiamo cancellato il modulo) e tende a leggerle in verticale o nell'ordine sbagliato. EasyOCR restituisce per ogni stringa le sue coordinate spaziali (x, y), permettendoti, se vuoi, di riordinare il testo dall'alto verso il basso o da sinistra a destra in modo matematico.
+</p>
+
+<p>
+Maggiore tolleranza al rumore: Se la sottrazione OpenCV lascia qualche piccolo frammento o "bava" delle vecchie linee del modulo, EasyOCR tende a ignorarli perché cerca forme che ricordino la struttura di una lettera (grazie alla rete neurale CRAFT), mentre Tesseract tenderebbe a scambiarli per punti, virgolette o trattini.
+</p>
+
+<p>
+Lettura del corsivo/manoscritto: Se i moduli cartacei originali sono stati riempiti a penna, il modello pre-allenato di EasyOCR offre una precisione decisamente superiore senza bisogno di addestrare modelli personalizzati.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Logica di Fallback (Motori Combinati)<a id="logica-di-fallback-motori-combinati" class="h_anchor"></a></h1>
+<p>
+Nessun OCR è perfetto al 100%. In produzione si usa una logica di <b>Fallback</b>:
+</p>
+<ol type="1" start="1">
+<li>Prova con Tesseract (veloce).</li>
+<li>Se il risultato non passa una validazione (es. manca il numero di fattura) o la confidenza è &lt; 50%.</li>
+<li>Prova con EasyOCR (più potente ma lento).</li>
+<li>Se fallisce ancora, segnala l'errore per intervento umano.</li>
+</ol>
+
+
+</div>
+<div class="slide">
+<h1>Strategie per i Documenti Storici<a id="strategie-per-i-documenti-storici" class="h_anchor"></a></h1>
+<p>
+Per i documenti anni '50:
+</p>
+<ol type="1" start="1">
+<li>Usare il parametro `--oem 1` in Tesseract (usa solo il motore LSTM).</li>
+<li>Spesso i font vecchi non sono riconosciuti bene: EasyOCR tende ad essere più "elastico" con le forme dei caratteri vintage.</li>
+<li>Se il documento è molto deteriorato, estrarre il testo riga per riga invece che l'intera pagina.</li>
+</ol>
+
+
+</div>
+<div class="slide">
+<h1>Lab 4: Estrattore Versatile<a id="lab-4-estrattore-versatile" class="h_anchor"></a></h1>
+<p>
+<b>Esercizio Pratico</b>:
+</p>
+<ol type="1" start="1">
+<li>Caricare un'immagine di una fattura o di una scheda.</li>
+<li>Implementare una funzione `estrai_campo(image, motore="tesseract")`.</li>
+<li>Provare a leggere lo stesso campo con entrambi i motori.</li>
+<li>Confrontare i risultati e la velocità di esecuzione.</li>
+<li>Salvare i risultati in un dizionario Python.</li>
+</ol>
+
+
+</div>
+<div class="slide">
+<h1>Discussione: I tuoi flussi<a id="discussione-i-tuoi-flussi" class="h_anchor"></a></h1>
+<ul>
+<li>Quali tipi di scrittura a mano devi gestire? (Stampatello vs Corsivo)</li>
+<li>Hai dei moduli fissi (checklist) o i campi cambiano posizione?</li>
+<li>Gestione lingue: hai documenti in lingue diverse dall'italiano?</li>
+</ul>
+
+
+
+</div>
+
+</div>
+
+</body>
+</html>
