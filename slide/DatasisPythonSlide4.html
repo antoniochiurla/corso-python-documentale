@@ -217,6 +217,20 @@ Provare con Jupyter
 
 </div>
 <div class="slide">
+<h1>Logica di Fallback (Motori Combinati)<a id="logica-di-fallback-motori-combinati" class="h_anchor"></a></h1>
+<p>
+Nessun OCR è perfetto al 100%. In produzione si usa una logica di <b>Fallback</b>:
+</p>
+<ol type="1" start="1">
+<li>Prova con Tesseract (veloce).</li>
+<li>Se il risultato non passa una validazione (es. manca il numero di fattura) o la confidenza è &lt; 50%.</li>
+<li>Prova con EasyOCR (più potente ma lento).</li>
+<li>Se fallisce ancora, segnala l'errore per intervento umano.</li>
+</ol>
+
+
+</div>
+<div class="slide">
 <h1>Proviamo del codice suggerito da Gemini<a id="proviamo-del-codice-suggerito-da-gemini" class="h_anchor"></a></h1>
 <p>
 Ho chiesto a Gemini di produrre del codice Python per trattare il PDF con le varie pagine del modello riempito a mano.<br>
@@ -272,20 +286,6 @@ Lettura del corsivo/manoscritto: Se i moduli cartacei originali sono stati riemp
 
 </div>
 <div class="slide">
-<h1>Logica di Fallback (Motori Combinati)<a id="logica-di-fallback-motori-combinati" class="h_anchor"></a></h1>
-<p>
-Nessun OCR è perfetto al 100%. In produzione si usa una logica di <b>Fallback</b>:
-</p>
-<ol type="1" start="1">
-<li>Prova con Tesseract (veloce).</li>
-<li>Se il risultato non passa una validazione (es. manca il numero di fattura) o la confidenza è &lt; 50%.</li>
-<li>Prova con EasyOCR (più potente ma lento).</li>
-<li>Se fallisce ancora, segnala l'errore per intervento umano.</li>
-</ol>
-
-
-</div>
-<div class="slide">
 <h1>Strategie per i Documenti Storici<a id="strategie-per-i-documenti-storici" class="h_anchor"></a></h1>
 <p>
 Per i documenti anni '50:
@@ -294,21 +294,6 @@ Per i documenti anni '50:
 <li>Usare il parametro `--oem 1` in Tesseract (usa solo il motore LSTM).</li>
 <li>Spesso i font vecchi non sono riconosciuti bene: EasyOCR tende ad essere più "elastico" con le forme dei caratteri vintage.</li>
 <li>Se il documento è molto deteriorato, estrarre il testo riga per riga invece che l'intera pagina.</li>
-</ol>
-
-
-</div>
-<div class="slide">
-<h1>Lab 4: Estrattore Versatile<a id="lab-4-estrattore-versatile" class="h_anchor"></a></h1>
-<p>
-<b>Esercizio Pratico</b>:
-</p>
-<ol type="1" start="1">
-<li>Caricare un'immagine di una fattura o di una scheda.</li>
-<li>Implementare una funzione `estrai_campo(image, motore="tesseract")`.</li>
-<li>Provare a leggere lo stesso campo con entrambi i motori.</li>
-<li>Confrontare i risultati e la velocità di esecuzione.</li>
-<li>Salvare i risultati in un dizionario Python.</li>
 </ol>
 
 
