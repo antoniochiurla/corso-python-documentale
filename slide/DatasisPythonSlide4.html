@@ -60,7 +60,7 @@ Argomenti
 <ul>
 <li>PyTesseract</li>
 <li>EasyOCR</li>
-<li>PSM/OEM</li>
+<li>PSM</li>
 <li>Logiche di Fallback</li>
 </ul>
 
@@ -105,6 +105,20 @@ Il segreto di Tesseract non è solo la qualità dell'immagine, ma il <b>Page Seg
 <li><b>PSM 4</b>: Assume una singola colonna di testo di dimensioni variabili (ottimo per ricevute).</li>
 <li><b>PSM 6</b>: Assume un singolo blocco uniforme di testo (ottimo per paragrafi di documenti storici).</li>
 <li><b>PSM 11</b>: Cerca solo testo sparso (ottimo per tesserini o etichette).</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>PyTesseract: Configurazione OEM<a id="pytesseract-configurazione-oem" class="h_anchor"></a></h1>
+<p>
+OCR Engine Mode
+</p>
+<ul>
+<li>0: Legacy Engine</li>
+<li>1: Neural Nets (LSTM)</li>
+<li>2: Legacy + motori LSTM</li>
+<li>3: (Default) Seglie il migliore tra i disponibili</li>
 </ul>
 
 
@@ -240,7 +254,7 @@ Dopo pochi adeguamenti ho reso utilizzabile il codice nel nostro notebook Jupyte
 </p>
 
 <p>
-Controllare su Jupiter e tornare per alcune spiegazioni.
+Controllare su Jupyter e tornare per alcune spiegazioni.
 </p>
 
 
