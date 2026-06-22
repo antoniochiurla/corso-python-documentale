@@ -1,0 +1,633 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Python e Document Automation</title>
+<!-- metadata -->
+<meta charset="UTF-8" />
+<meta name="generator" content="Zim 0.76.3" />
+<meta name="version" content="S5 1.1" />
+<meta name="presdate" content="" />
+<meta name="author" content="" />
+<meta name="company" content="" />
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="./DatasisPythonSlide6_files/_resources/ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="./DatasisPythonSlide6_files/_resources/ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="./DatasisPythonSlide6_files/_resources/ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="./DatasisPythonSlide6_files/_resources/ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- S5 JS -->
+<script src="./DatasisPythonSlide6_files/_resources/ui/default/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+<div id="controls"><!-- DO NOT EDIT --></div>
+<div id="currentSlide"><!-- DO NOT EDIT --></div>
+<div id="header"></div>
+<div id="footer">
+<!--
+<h1>[location/date of presentation]</h1>
+<h2>[slide show title here]</h2>
+-->
+<h1 id="h1-footer">&nbsp;</h1>
+<h2 id="h2-footer">&nbsp;</h2>
+</div>
+
+</div>
+
+<div class="presentation">
+
+<div class="slide">
+<h1>Python e Document Automation<a id="python-e-document-automation" class="h_anchor"></a></h1>
+<h2>Lezione 6 / 7<a id="lezione-6--7" class="h_anchor"></a></h2>
+<h3>Antonio Chiurla<a id="antonio-chiurla" class="h_anchor"></a></h3>
+<h4>logo: python.png<a id="logo-pythonpng" class="h_anchor"></a></h4>
+<h4>date: 2026<a id="date-2026" class="h_anchor"></a></h4>
+
+
+</div>
+<div class="slide">
+<h1>Lezione 6<a id="lezione-6" class="h_anchor"></a></h1>
+<p>
+<b>Data Wrangling con Pandas e Generazione Output</b><br>
+Argomenti:
+</p>
+<ul>
+<li>Pandas e i Dataframe</li>
+<li>Data Cleaning post-AI</li>
+<li>Export Excel/XML/CSV</li>
+</ul>
+
+
+
+</div>
+<div class="slide">
+<h1>Pandas: Il Motore dell'Analisi Dati<a id="pandas-il-motore-dellanalisi-dati" class="h_anchor"></a></h1>
+<p>
+<b>Dall'estrazione alla strutturazione</b>
+</p>
+
+<ul>
+<li><b>Cos'è?</b> Una libreria open-source che fornisce strutture dati ad alte prestazioni (DataFrame).</li>
+<li><b>Perché in Document Automation?</b> L'OCR ci dà testo "grezzo", l'AI ci dà JSON disordinati. Pandas è l'ambiente dove questi dati vengono puliti, validati e trasformati in tabelle finali.</li>
+<li><b>Excel vs Pandas</b>: Immaginate Excel, ma senza i limiti di righe e completamente automatizzabile tramite codice.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Le Strutture Core: Series e DataFrame<a id="le-strutture-core-series-e-dataframe" class="h_anchor"></a></h1>
+<p>
+Pandas si basa su due oggetti principali:
+</p>
+<ol type="1" start="1">
+<li><b>Series</b>: Un array monodimensionale (come una singola colonna di Excel).</li>
+<li><b>DataFrame</b>: Una tabella bidimensionale. È una collezione di Series che condividono lo stesso indice.</li>
+</ol>
+
+<pre>
+import pandas as pd
+
+# Creazione manuale di un DataFrame
+data = {
+    'Documento': ['Fatt_01', 'Fatt_02', 'DDT_03'],
+    'Importo': [120.50, 450.00, 0.00]
+}
+df = pd.DataFrame(data)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Caricamento Dati: Input Flessibili<a id="caricamento-dati-input-flessibili" class="h_anchor"></a></h1>
+<p>
+In un flusso di automazione, i dati arrivano da diverse fonti. Pandas li legge quasi tutti:
+</p>
+<ul>
+<li><b>JSON</b> (Output tipico delle AI): <tt>pd.read_json()</tt> o <tt>pd.DataFrame(lista_dict)</tt></li>
+<li><b>CSV</b>: <tt>pd.read_csv('log_estrazioni.csv')</tt></li>
+<li><b>Excel</b>: <tt>pd.read_excel('anagrafica_clienti.xlsx')</tt></li>
+<li><b>SQL</b>: Integrazione diretta con database aziendali.</li>
+</ul>
+
+<pre>
+# Trasformare l'output dell'AI direttamente in DataFrame
+risultati_ai = [{"piva": "123", "tot": 10}, {"piva": "456", "tot": 20}]
+df = pd.DataFrame(risultati_ai)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Ispezione e Diagnostica<a id="ispezione-e-diagnostica" class="h_anchor"></a></h1>
+<p>
+Prima di elaborare, dobbiamo capire "cosa c'è dentro" (specialmente dopo un OCR).
+</p>
+<ul>
+<li><b>df.head(n)</b>: Mostra le prime n righe.</li>
+<li><b>df.info()</b>: Mostra i tipi di dati e i valori mancanti.</li>
+<li><b>df.describe()</b>: Statistiche rapide (media, max, min) per le colonne numeriche.</li>
+<li><b>df.shape</b>: Restituisce (righe, colonne).</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Selezione e Slicing Avanzato<a id="selezione-e-slicing-avanzato" class="h_anchor"></a></h1>
+<p>
+Come navigare tra i dati estratti:
+</p>
+<ul>
+<li><b>df['NomeColonna']</b>: Seleziona una colonna.</li>
+<li><b>df.iloc[0:5]</b>: Seleziona le prime 5 righe per posizione.</li>
+<li><b>df.loc[df['Importo'] &gt; 100]</b>: Seleziona righe basandosi su una condizione (Filtro).</li>
+</ul>
+
+<pre>
+# Estrai solo P.IVA e Totale per i documenti sopra i 500€
+report = df.loc[df['Importo'] &gt; 500, ['piva', 'Importo']]
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Il Problema dei Dati Mancanti: None, NaN, NaT<a id="il-problema-dei-dati-mancanti-none-nan-nat" class="h_anchor"></a></h1>
+<p>
+Dopo l'OCR, molti campi possono essere vuoti. Pandas li gestisce con tre "facce":
+</p>
+<ol type="1" start="1">
+<li><b>None</b>: Il vuoto di Python (colonne di testo).</li>
+<li><b>NaN (Not a Number)</b>: Il vuoto nelle colonne numeriche.</li>
+<li><b>NaT (Not a Time)</b>: Il vuoto nelle colonne data.</li>
+</ol>
+
+<pre>
+# Contare i campi che l'AI non è riuscita a estrarre
+null_counts = df.isna().sum()
+
+# Riempire i vuoti con un valore di default
+df['Importo'] = df['Importo'].fillna(0.0)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Data Cleaning: Trasformazioni al Volo<a id="data-cleaning-trasformazioni-al-volo" class="h_anchor"></a></h1>
+<p>
+L'OCR legge spesso sporco (es. "1.250 , 00 €"). Dobbiamo "pulire" la colonna:
+</p>
+<ul>
+<li><b>.str.replace()</b>: Per rimuovere caratteri inutili.</li>
+<li><b>.astype()</b>: Per cambiare tipo (es. da stringa a float).</li>
+<li><b>.apply(lambda x: ...)</b>: Per trasformazioni personalizzate e complesse.</li>
+</ul>
+
+<pre>
+# Pulizia tipica importo OCR
+df['Prezzo'] = df['Prezzo'].str.replace('€', '') _
+	.str.replace(',', '.').astype(float)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Manipolazione Date<a id="manipolazione-date" class="h_anchor"></a></h1>
+<p>
+Il formato date è un incubo nell'automazione. Pandas lo risolve con <tt>to_datetime</tt>.
+</p>
+<ul>
+<li>Sincronizza formati diversi: "2024/01/01" e "01-01-2024".</li>
+<li>Estrai informazioni: Giorno, mese, anno, o trimestre.</li>
+</ul>
+
+<pre>
+df['scad'] = pd.to_datetime(df['data_str'], errors='coerce')
+df['mese'] = df['data_scadenza'].dt.month
+</pre>
+<p>
+<b>errors='coerce'</b>: Se la data è illeggibile (rumore OCR), mette <b>NaT</b> invece di andare in crash.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Aggregazioni e Reportistica<a id="aggregazioni-e-reportistica" class="h_anchor"></a></h1>
+<p>
+Spesso dobbiamo consolidare i dati (es. totale IVA per fornitore).
+</p>
+<ul>
+<li><b>groupby()</b>: Raggruppa i dati per una o più colonne.</li>
+<li><b>agg()</b>: Applica funzioni diverse (somma, media, conteggio).</li>
+</ul>
+
+<pre>
+# Report: Totale importi estratti per tipologia di documento
+report = df.groupby('tipo_doc')['Importo'].sum()
+</pre>
+
+
+
+</div>
+<div class="slide">
+<h1>Pandas: Accedere ai Dati (loc, iloc e [])<a id="pandas-accedere-ai-dati-loc-iloc-e-" class="h_anchor"></a></h1>
+<p>
+<b>Navigare tra Righe e Colonne con Precisione</b>
+</p>
+
+<p>
+In Pandas esistono tre modi principali per accedere ai dati:
+</p>
+<ol type="1" start="1">
+<li><b>Parentesi Quadre `[]`</b>: Selezione rapida di colonne o slicing di righe.</li>
+<li><b>.loc[]</b>: Accesso basato sulle <b>Etichette</b> (nomi di righe e colonne).</li>
+<li><b>.iloc[]</b>: Accesso basato sulla <b>Posizione</b> intera (0, 1, 2...).</li>
+</ol>
+
+<p>
+<b>Perché non usare sempre le quadre?</b> <br>
+Perché le quadre semplici a volte restituiscono una "copia" dei dati e a volte una "vista", creando il fastidioso errore <tt>SettingWithCopyWarning</tt>.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Quando NON serve .loc (Uso delle quadre `[]`)<a id="quando-non-serve-loc-uso-delle-quadre-" class="h_anchor"></a></h1>
+<p>
+Le parentesi quadre sono il metodo più veloce per due operazioni specifiche:
+</p>
+
+<ol type="1" start="1">
+<li><b>Selezionare una o più colonne</b>:</li>
+</ol>
+<pre>
+# Restituisce una Series
+df['Prezzo'] 
+
+# Restituisce un DataFrame con due colonne
+df[['ID_Documento', 'Prezzo']] 
+</pre>
+
+<ol type="1" start="2">
+<li><b>Slicing di righe (solo per posizione)</b>:</li>
+</ol>
+<pre>
+# Prende le prime 5 righe
+df[:5] 
+</pre>
+<p>
+<b>Suggerimento</b>: Usa le quadre `[]` quando vuoi solo "leggere" intere colonne.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Quando è OBBLIGATORIO usare .loc<a id="quando-è-obbligatorio-usare-loc" class="h_anchor"></a></h1>
+<p>
+Il metodo <tt>.loc</tt> è necessario quando devi fare selezioni combinate di righe e colonne.<br>
+La sintassi è: <b><tt>df.loc[righe, colonne]</tt></b>
+</p>
+
+<ol type="1" start="1">
+<li><b>Filtrare righe e selezionare colonne specifiche</b>:</li>
+</ol>
+<pre>
+# Prendi il 'Totale' solo per le fatture del fornitore 'Rossi'
+df.loc[df['Fornitore'] == 'Rossi', 'Totale']
+</pre>
+
+<ol type="1" start="2">
+<li><b>Modificare valori in base a una condizione</b>:</li>
+</ol>
+<pre>
+# Se il prezzo è NaN, impostalo a 0.0
+df.loc[df['Prezzo'].isna(), 'Prezzo'] = 0.0
+</pre>
+<p>
+<b>Regola d'oro</b>: Se devi scrivere o modificare dati, usa sempre <tt>.loc</tt>.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>.loc vs .iloc (Etichette vs Posizioni)<a id="loc-vs-iloc-etichette-vs-posizioni" class="h_anchor"></a></h1>
+<p>
+La differenza sta nel "linguaggio" che usi per indicare dove si trova il dato.
+</p>
+
+<ul>
+<li><b>.loc</b>: Usa i nomi. Se l'indice della riga è 'Fatt_2024', usi quello.</li>
+<li><b>.iloc</b>: Usa i numeri. Non gli importa del nome, vuole sapere se è la riga 0, 1 o 10.</li>
+</ul>
+
+<pre>
+# Con .loc (Etichetta '3' se l'indice è numerico, ma è un nome)
+df.loc[3, 'Data'] 
+
+# Con .iloc (La quarta riga e la seconda colonna, partendo da 0)
+df.iloc[3, 1] 
+</pre>
+<p>
+<b>Nota</b>: <tt>.loc</tt> include l'estremo finale dello slicing (3:5 prende anche 5), <tt>.iloc</tt> lo esclude (3:5 prende 3 e 4).
+</p>
+
+
+</div>
+<div class="slide">
+<h1>La Dot Notation (df.colonna)<a id="la-dot-notation-dfcolonna" class="h_anchor"></a></h1>
+<p>
+Puoi accedere a una colonna anche come se fosse un attributo: <tt>df.Prezzo</tt>.<br>
+<b>Vantaggi</b>:
+</p>
+<ul>
+<li>Velocissimo da scrivere.</li>
+<li>Funziona bene con l'autocompletamento (Tab).</li>
+</ul>
+<p>
+<b>Limiti (Quando NON funziona)</b>:
+</p>
+<ul>
+<li>Se il nome della colonna ha <b>spazi</b> (es. <tt>df.Totale Fattura</tt> -&gt; ERRORE).</li>
+<li>Se il nome della colonna coincide con un <b>metodo di Pandas</b> (es. <tt>df.count</tt>, <tt>df.shape</tt>).</li>
+<li>Non puoi usarlo per creare una nuova colonna.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Suggerimento Pro: Evitare il Chained Indexing<a id="suggerimento-pro-evitare-il-chained-indexing" class="h_anchor"></a></h1>
+<p>
+L'errore più comune è fare: <tt>df['Prezzo'][0] = 100</tt>.<br>
+Questo si chiama <b>Chained Indexing</b> (indicizzazione a catena).
+</p>
+
+<ul>
+<li><b>Il problema</b>: Pandas deve fare due operazioni. Spesso fallisce nel modificare il valore originale perché la prima operazione potrebbe aver creato una copia temporanea.</li>
+<li><b>La soluzione</b>: Usa sempre un'unica operazione con <tt>.loc</tt>.</li>
+</ul>
+
+<pre>
+# NO (Pericoloso)
+df[df['ID'] == 10]['Stato'] = 'Inviato'
+
+# SÌ (Sicuro e veloce)
+df.loc[df['ID'] == 10, 'Stato'] = 'Inviato'
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Riepilogo Best Practices<a id="riepilogo-best-practices" class="h_anchor"></a></h1>
+<ol type="1" start="1">
+<li><b>Semplice lettura di colonne?</b> Usa <tt>df['colonna']</tt>.</li>
+<li><b>Filtro sulle righe + Scelta colonne?</b> Usa <tt>.loc</tt>.</li>
+<li><b>Modifica di valori?</b> Usa sempre <tt>.loc</tt>.</li>
+<li><b>Devi scorrere il DataFrame per posizione (es. in un loop)?</b> Usa <tt>.iloc</tt>.</li>
+<li><b>Accesso rapido in scrittura a un singolo valore?</b> Esiste anche <tt>.at[riga, colonna]</tt>, che è una versione ultra-veloce di <tt>.loc</tt> per scalari.</li>
+</ol>
+
+
+
+</div>
+<div class="slide">
+<h1>Export Finale: Excel, CSV e XML<a id="export-finale-excel-csv-e-xml" class="h_anchor"></a></h1>
+<p>
+Il risultato del nostro script deve essere consegnato.
+</p>
+<ul>
+<li><b>Excel</b>: Supporta fogli multipli con <tt>ExcelWriter</tt>.</li>
+<li><b>CSV</b>: Il più leggero per importazioni in altri software.</li>
+<li><b>XML</b>: Per sistemi legacy o fatturazione elettronica.</li>
+</ul>
+
+<pre>
+# Salvare in Excel senza l'indice numerico di Pandas
+df.to_excel('Risultati_OCR_Finale.xlsx', index=False)
+
+# Generare XML
+xml_data = df.to_xml(row_name="Fattura")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Pandas per l'Automazione Documentale?<a id="pandas-per-lautomazione-documentale" class="h_anchor"></a></h1>
+<p>
+L'output dell'AI è spesso un singolo JSON. Ma cosa succede se:
+</p>
+<ul>
+<li>Dobbiamo processare 1000 fatture e creare un unico report?</li>
+<li>Dobbiamo calcolare totali e medie?</li>
+<li>Dobbiamo validare che le date siano nel formato corretto per il software aziendale?</li>
+</ul>
+
+<p>
+<b>Pandas</b> trasforma una lista di dizionari in una tabella (DataFrame) potente e flessibile.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Da JSON a DataFrame<a id="da-json-a-dataframe" class="h_anchor"></a></h1>
+<p>
+Iniziamo col trasformare i dati estratti in una struttura tabellare.
+</p>
+<pre>
+import pandas as pd
+
+# Con una lista di dati estratti da più documenti
+dati_estratti = [
+    {"id": "F01", "data": "10/01/2024", "totale": "1.250,50 €"},
+    {"id": "F02", "data": "12 Gennaio 2024", "totale": "300,00"},
+]
+
+df = pd.DataFrame(dati_estratti)
+print(df.head())
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Gestione delle Tabelle (Righe Fattura)<a id="gestione-delle-tabelle-righe-fattura" class="h_anchor"></a></h1>
+<p>
+Spesso un documento contiene una tabella di articoli. Pandas eccelle nel "appiattire" queste strutture.
+</p>
+<pre>
+# Se l'AI restituisce un JSON con una lista di 'righe_ordine'
+doc = {"id": "F01", "righe":
+       [{"desc": "A", "qta": 1}, {"desc": "B", "qta": 2}]}
+
+# Trasforma le righe in righe di tabella, mantenendo l'ID
+df_righe = pd.json_normalize(doc,
+       record_path=['righe'], meta=['id'])
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Export: CSV ed Excel Multi-Sheet<a id="export-csv-ed-excel-multi-sheet" class="h_anchor"></a></h1>
+<p>
+Generare un file Excel con più fogli (es. uno per le testate, uno per le righe dettaglio) è una richiesta comune.
+</p>
+<pre>
+with pd.ExcelWriter("Report_Consolidato.xlsx") as writer:
+    df.to_excel(writer, sheet_name="Fatture", index=False)
+    df_righe.to_excel(writer,
+             sheet_name="Dettagli", index=False)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Export: XML (per sistemi legacy)<a id="export-xml-per-sistemi-legacy" class="h_anchor"></a></h1>
+<p>
+Alcuni software aziendali richiedono XML. Sebbene Pandas non abbia un <tt>to_xml</tt> perfetto per ogni schema, possiamo costruirlo facilmente.
+</p>
+<pre>
+# Esempio semplice di generazione XML
+xml_output = df.to_xml(root_name="Documenti", row_name="Fattura")
+with open("output.xml", "w") as f:
+    f.write(xml_output)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Esempi<a id="esempi" class="h_anchor"></a></h1>
+<p>
+Nella directory esempi di Lezione 6, creare il virtual env, importare le dipendenze, lanciare python e importare 'esempiopandas'.
+</p>
+
+<p>
+<tt>import esempiopandas1</tt><br>
+<tt>df = esempiopandas1.df</tt>
+</p>
+
+<p>
+per ottenere il dataframe su cui lavorare
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Prestazioni<a id="prestazioni" class="h_anchor"></a></h1>
+<p>
+Vettorizzazione: Pandas è scritto in C. Quando facciamo df['prezzo'] * 1.22 (calcolo IVA), Pandas non cicla riga per riga come farebbe un for, ma applica l'operazione a tutta la memoria in un colpo solo. Questo lo rende migliaia di volte più veloce.
+</p>
+
+<p>
+<tt>df['Prezzo_Unitario'] * 1.22</tt>
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Indici<a id="indici" class="h_anchor"></a></h1>
+<p>
+Indici: L'indice (quella colonna di numeri a sinistra) è come l'indirizzo di ogni riga. Può essere cambiato (es. usare la Partita IVA come indice) per ricerche ultra-rapide.
+</p>
+
+<pre>
+df.index
+RangeIndex(start=0, stop=5, step=1)
+df.index.value
+array([0, 1, 2, 3, 4])
+</pre>
+
+<p>
+Quando i dati lo consentono, si può usare una particolare colonna, con dati univoci, come index:<br>
+<tt>df = df.set_index('ID_Utente')</tt>
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Chiarimento su indice<a id="chiarimento-su-indice" class="h_anchor"></a></h1>
+<p>
+La differenza tra <tt>.loc</tt> e <tt>.iloc</tt>
+</p>
+<pre>
+df.loc[0, 'Prodotto']
+df.iloc[0, 2]
+df.iloc[0]['Prodotto']
+
+sorted = df.sort_values(by='Quantita', ascending=False)
+sorted.loc[0, 'Prodotto']
+sorted.iloc[0, 2]
+sorted.iloc[0]['Prodotto']
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Boolean<a id="boolean" class="h_anchor"></a></h1>
+<p>
+Boolean Indexing: Notare che quando si applica un filtro, dentro le parentesi quadre c'è in realtà una lista di True e False generata dal confronto. Pandas mostra solo le righe dove il valore è True.
+</p>
+
+<pre>
+df[df['Quantita'] &gt;= 4]
+   ID_Ordine       Data            Prodotto  Quantita  Prezzo_Unitario  Totale_Riga
+1        648 2026-06-16  Tastiera Meccanica         4             79.9        319.6
+2        648 2026-06-16         Monitor 27"         7            249.0       1743.0
+</pre>
+
+<pre>
+df['Quantita'] &gt;= 4
+0    False
+1     True
+2     True
+3    False
+4    False
+Name: Quantita, dtype: bool
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Memoria<a id="memoria" class="h_anchor"></a></h1>
+<p>
+Memoria: Se i documenti sono milioni, Pandas carica tutto in RAM. Si può ricorrere al chunksize per leggere file enormi un po' alla volta (concetto utile per chi lavora in grandi archivi storici).
+</p>
+
+<pre>
+dimensione_chunk = 10000
+path_file = 'dataset_gigante.csv'
+lettore_chunk = pd.read_csv(path_file, chunksize=dimensione_chunk)
+for chunk in lettore_chunk:
+	massimo_nel_chunk = chunk['NomeColonnaNumerica'].max()
+	valori_massimi_totali.append(massimo_nel_chunk)
+	totale_righe_elaborate += len(chunk)
+	print(f"Elaborate {totale_righe_elaborate} righe finora...")
+massimo_assoluto = max(valori_massimi_totali)
+print(f"\nIl valore massimo assoluto è: {massimo_assoluto}")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Esempi con molti dati<a id="esempi-con-molti-dati" class="h_anchor"></a></h1>
+<p>
+Non moltissimi, circa 135.000 righe.<br>
+Nella stessa directory <tt>esempi:</tt>
+</p>
+<ul>
+<li>01_genera_dati.py</li>
+<li>02_analisi_esplorativa.py</li>
+<li>03_normalizzazione.py</li>
+<li>04_statistiche.py</li>
+</ul>
+
+
+
+
+</div>
+
+</div>
+
+</body>
+</html>
