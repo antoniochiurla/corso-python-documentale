@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Python e Document Automation</title>
+<!-- metadata -->
+<meta charset="UTF-8" />
+<meta name="generator" content="Zim 0.76.3" />
+<meta name="version" content="S5 1.1" />
+<meta name="presdate" content="" />
+<meta name="author" content="" />
+<meta name="company" content="" />
+<!-- configuration parameters -->
+<meta name="defaultView" content="slideshow" />
+<meta name="controlVis" content="hidden" />
+<!-- style sheet links -->
+<link rel="stylesheet" href="./DatasisPythonSlide7_files/_resources/ui/default/slides.css" type="text/css" media="projection" id="slideProj" />
+<link rel="stylesheet" href="./DatasisPythonSlide7_files/_resources/ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
+<link rel="stylesheet" href="./DatasisPythonSlide7_files/_resources/ui/default/print.css" type="text/css" media="print" id="slidePrint" />
+<link rel="stylesheet" href="./DatasisPythonSlide7_files/_resources/ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- S5 JS -->
+<script src="./DatasisPythonSlide7_files/_resources/ui/default/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+<div id="controls"><!-- DO NOT EDIT --></div>
+<div id="currentSlide"><!-- DO NOT EDIT --></div>
+<div id="header"></div>
+<div id="footer">
+<!--
+<h1>[location/date of presentation]</h1>
+<h2>[slide show title here]</h2>
+-->
+<h1 id="h1-footer">&nbsp;</h1>
+<h2 id="h2-footer">&nbsp;</h2>
+</div>
+
+</div>
+
+<div class="presentation">
+
+<div class="slide">
+<h1>Python e Document Automation<a id="python-e-document-automation" class="h_anchor"></a></h1>
+<h2>Lezione 7 / 7<a id="lezione-7--7" class="h_anchor"></a></h2>
+<h3>Antonio Chiurla<a id="antonio-chiurla" class="h_anchor"></a></h3>
+<h4>logo: python.png<a id="logo-pythonpng" class="h_anchor"></a></h4>
+<h4>date: 2026<a id="date-2026" class="h_anchor"></a></h4>
+
+
+</div>
+<div class="slide">
+<h1>Lezione 7<a id="lezione-7" class="h_anchor"></a></h1>
+<p>
+<b>Automazione Output, SharePoint e Orchestrazione Finale</b><br>
+Argomenti:
+</p>
+<ul>
+<li>SharePoint API</li>
+<li>Chiamate REST</li>
+<li>Logging e Security</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Chiudere il Cerchio: L'Integrazione Cloud<a id="chiudere-il-cerchio-lintegrazione-cloud" class="h_anchor"></a></h1>
+<p>
+Il lavoro non finisce quando i dati sono pronti, ma quando sono <b>dove l'azienda li aspetta</b>.<br>
+I tre target principali per l'output sono:
+</p>
+<ol type="1" start="1">
+<li><b>SharePoint / OneDrive</b>: Per l'archiviazione dei documenti processati e dei report.</li>
+<li><b>Software via API</b>: Per l'invio diretto dei dati estratti.</li>
+<li><b>Log di Sistema</b>: Per monitorare quali documenti sono falliti e perché.</li>
+</ol>
+
+
+</div>
+<div class="slide">
+<h1>Integrazione SharePoint<a id="integrazione-sharepoint" class="h_anchor"></a></h1>
+<p>
+Useremo la libreria <tt>Office365-REST-Python-Client</tt>. 
+</p>
+<pre>
+pip install Office365-REST-Python-Client
+</pre>
+<p>
+È necessario avere le credenziali (Sito, Client ID e Secret, oppure User/Pass).
+</p>
+
+<pre>
+from office365.sharepoint.client_context import ClientContext
+from office365.runtime.auth.user_credential import UserCredential
+
+ctx = ClientContext(
+      "https://tuo_dominio.sharepoint.com/sites/NomeSito")
+      .with_credentials(UserCredential("utente@dominio.it",
+                          "password"))
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Integrazione SharePoint (segue)<a id="integrazione-sharepoint-segue" class="h_anchor"></a></h1>
+<pre>
+
+# Esempio: Caricamento di un file
+target_folder = ctx.web.get_folder_by_server_relative_url(
+         "Documenti Condivisi/Output_OCR")
+with open("report_finale.xlsx", 'rb') as content_file:
+    file_content = content_file.read()
+target_folder.upload_file("report_finale.xlsx",
+           file_content).execute_query()
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Invio Dati via API REST<a id="invio-dati-via-api-rest" class="h_anchor"></a></h1>
+<p>
+Il software aziendale solitamente accetta dati tramite una chiamata <b>POST</b> con un payload <b>JSON</b>.
+</p>
+<pre>
+import requests
+
+def invia_dati_via_rest(dati_json, api_key):
+    url = "https://api.servizio.it/v1/import" # URL ipotetico
+    headers = {"Authorization": f"Bearer {api_key}",
+               "Content-Type": "application/json"}
+    response = requests.post(url, json=dati_json, headers=headers)
+    if response.status_code == 200:
+        print("Dati inviati con successo al servizio")
+    else:
+        print(f"Errore invio: {response.status_code}")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Logging: Monitorare il Flusso<a id="logging-monitorare-il-flusso" class="h_anchor"></a></h1>
+<p>
+In un'automazione remota, non possiamo guardare lo schermo. Serve un file di log che registri tutto quello che succede.<br>
+Il modulo <tt>logging</tt> di Python è lo standard:
+</p>
+<pre>
+import logging
+
+logging.basicConfig(
+    filename='automazione.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+logging.info(f"Inizio elaborazione cartella {dir}")
+logging.error(f"Fallita lettura doc. {doc}: qualità insufficiente")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Logging: I 5 Livelli di Severità<a id="logging-i-5-livelli-di-severità" class="h_anchor"></a></h1>
+<p>
+Non tutti i log hanno la stessa importanza. Usare il livello corretto permette di filtrare le informazioni in fase di analisi.
+</p>
+<ul>
+<li><b>DEBUG (10)</b>: Informazioni dettagliate, utili solo per diagnosticare problemi (es. "Variabile x vale 10").</li>
+<li><b>INFO (20)</b>: Conferma che tutto stia procedendo come previsto (es. "Documento processato correttamente").</li>
+<li><b>WARNING (30)</b>: Indicazione di qualcosa di inaspettato, ma il programma continua a girare (es. "Spazio disco quasi esaurito").</li>
+<li><b>ERROR (40)</b>: Un problema serio che ha impedito l'esecuzione di una funzione (es. "Impossibile connettersi all'API").</li>
+<li><b>CRITICAL (50)</b>: Errore fatale, il programma non può più proseguire (es. "Database non trovato").</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Personalizzare il Formato (Formatter)<a id="personalizzare-il-formato-formatter" class="h_anchor"></a></h1>
+<p>
+Un log senza timestamp o senza sapere "chi" lo ha generato è poco utile. Possiamo personalizzare l'output usando dei segnaposto.
+</p>
+
+<p>
+<b>Segnaposto comuni:</b>
+</p>
+<ul>
+<li><tt>%(asctime)s</tt>: Data e ora dell'evento.</li>
+<li><tt>%(levelname)s</tt>: Il livello del log (INFO, ERROR, ecc.).</li>
+<li><tt>%(message)s</tt>: Il messaggio testuale che inviamo.</li>
+<li><tt>%(name)s</tt>: Il nome del logger che ha generato l'evento.</li>
+<li><tt>%(lineno)d</tt>: Il numero della riga di codice.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Formatter - Esempio<a id="formatter---esempio" class="h_anchor"></a></h1>
+<pre>
+# Configurazione con formato professionale
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logging.info("Messaggio formattato correttamente")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Logger Modulari: getLogger(<u>name</u>)<a id="logger-modulari-getloggername" class="h_anchor"></a></h1>
+<p>
+In un progetto complesso con più file, non vogliamo usare il "Root Logger" globale. Usiamo invece logger specifici per ogni modulo.
+</p>
+
+<ul>
+<li><b>Identità</b>: Usando <tt>logging.getLogger(__name__)</tt> in ogni file, il log indicherà esattamente da quale modulo proviene l'errore.</li>
+<li><b>Gerarchia</b>: I log "figli" ereditano le impostazioni dal genitore (Root), ma possono essere spenti o filtrati singolarmente.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Logger Modulari - Esempio<a id="logger-modulari---esempio" class="h_anchor"></a></h1>
+<pre>
+# In ocr_engine.py
+logger = logging.getLogger(__name__)
+
+def estrai():
+    logger.info("Avvio motore OCR") 
+    # L'output mostrerà: ... - ocr_engine - INFO - Avvio motore OCR
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Handler: Destinazioni Multiple<a id="handler-destinazioni-multiple" class="h_anchor"></a></h1>
+<p>
+Un Logger può inviare i dati a più destinazioni contemporaneamente (es. Console e File) usando gli <b>Handler</b>.
+</p>
+
+<ul>
+<li><b>StreamHandler</b>: Invia i log alla console (standard output).</li>
+<li><b>FileHandler</b>: Scrive i log in un file fisico.</li>
+</ul>
+
+
+</div>
+<div class="slide">
+<h1>Destinazioni multiple - Definizione<a id="destinazioni-multiple---definizione" class="h_anchor"></a></h1>
+<pre>
+logger = logging.getLogger("AppDocumenti")
+logger.setLevel(logging.DEBUG)
+
+# 1. Handler per il File (Logga tutto dal livello DEBUG in su)
+fh = logging.FileHandler('full_debug.log')
+fh.setLevel(logging.DEBUG)
+
+# 2. Handler per la Console (Mostra solo gli ERRORI per non disturbare l'utente)
+ch = logging.StreamHandler()
+ch.setLevel(logging.ERROR)
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Destinazioni multiple - Utilizzo<a id="destinazioni-multiple---utilizzo" class="h_anchor"></a></h1>
+<pre>
+# Aggiunta degli handler al logger
+logger.addHandler(fh)
+logger.addHandler(ch)
+
+logger.error("Questo appare sia in console che nel file!")
+logger.debug("Questo appare SOLO nel file log.")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>Security: Gestione delle Credenziali<a id="security-gestione-delle-credenziali" class="h_anchor"></a></h1>
+<p>
+<b>MAI</b> scrivere password o API Key direttamente nel codice.<br>
+Useremo un file <tt>.env</tt> e la libreria <tt>python-dotenv</tt> per caricare le variabili d'ambiente.
+</p>
+
+
+</div>
+<div class="slide">
+<h1>Dotenv<a id="dotenv" class="h_anchor"></a></h1>
+<ol type="1" start="1">
+<li>Crea un file chiamato <tt>.env</tt>:</li>
+</ol>
+<pre>
+SP_USER=mario@azienda.it
+SP_PASS=MiaPasswordSicura
+OPENAI_KEY=sk-xxxx
+</pre>
+<ol type="1" start="2">
+<li>Caricalo nel tuo script:</li>
+</ol>
+<pre>
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv("OPENAI_KEY")
+</pre>
+
+
+</div>
+<div class="slide">
+<h1>L'Orchestratore Finale (Main)<a id="lorchestratore-finale-main" class="h_anchor"></a></h1>
+<p>
+Il file <tt>main.py</tt> deve essere snello e coordinare i moduli creati nelle lezioni precedenti.
+</p>
+<ol type="1" start="1">
+<li><b>Scansiona</b> cartella (Lezione 2)</li>
+<li><b>Pre-processa</b> immagine (Lezione 3)</li>
+<li><b>Estrai</b> testo con OCR (Lezione 4)</li>
+<li><b>Struttura</b> con AI (Lezione 5)</li>
+<li><b>Pulisci</b> con Pandas (Lezione 6)</li>
+<li><b>Carica</b> su SharePoint e invia via API (Lezione 7)</li>
+</ol>
+
+
+</div>
+<div class="slide">
+<h1>Conclusioni<a id="conclusioni" class="h_anchor"></a></h1>
+<ul>
+<li>Consolidamento: Rifinitura degli script creati.</li>
+<li>Manutenzione: Come aggiornare i modelli o le API.</li>
+</ul>
+
+</div>
+
+</div>
+
+</body>
+</html>
